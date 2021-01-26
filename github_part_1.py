@@ -7,7 +7,7 @@ Created on Fri Jan 22 17:09:42 2021
 import pandas as pd
 import datetime as dt
 
-import bs4
+
 import requests
 from bs4 import BeautifulSoup
 
