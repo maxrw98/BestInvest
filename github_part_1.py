@@ -2,7 +2,7 @@
 """
 Created on Fri Jan 22 17:09:42 2021
 
-@author: Nurcan Düzenli
+@author: Ertuğrul Furkan Düzenli
 """
 import pandas as pd
 import datetime as dt

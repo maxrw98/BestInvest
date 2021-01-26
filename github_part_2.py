@@ -2,7 +2,7 @@
 """
 Created on Fri Jan 22 19:28:54 2021
 
-@author: Nurcan Düzenli
+@author: Ertuğrul Furkan Düzenli
 """
 
 import pandas as pd
