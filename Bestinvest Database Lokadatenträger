@@ -1,0 +1,113 @@
+import sqlite3
+from sqlite3 import Error
+
+#create connection           
+def create_connection(db_file):
+    """ create a database connection to the SQLite database
+        specified by db_file
+    :param db_file: database file
+    :return: Connection object or None
+    """
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except Error as e:
+        print(e)
+
+    return conn
+
+#create table
+def create_table(conn, create_table_sql):
+    """ create a table from the create_table_sql statement
+    :param conn: Connection object
+    :param create_table_sql: a CREATE TABLE statement
+    :return:
+    """
+    try:
+        c = conn.cursor()
+        c.execute(create_table_sql)
+    except Error as e:
+        print(e)
+
+#create overview
+def create_overviews(conn, overviews):
+    """
+    Create a new project into the projects table
+    :param conn:
+    :param overviews:
+    :return: Company_Name
+    """
+    sql = ''' INSERT INTO overviews(name,count,date,fee,exchangeRate)
+              VALUES(?,?,?,?,?) '''
+    cur = conn.cursor()
+    cur.execute(sql, overviews)
+    conn.commit()
+    return cur.lastrowid
+
+
+def create_company(conn, company):
+    """
+    Create a new task
+    :param conn:
+    :param company:
+    :return:
+    """
+
+    sql = ''' INSERT INTO company(name,company_id,date,price)
+              VALUES(?,?,?,?) '''
+    cur = conn.cursor()
+    cur.execute(sql, company)
+    conn.commit()
+    return cur.lastrowid
+
+def main():
+    database = r"C:\sqlite\bestinvest.db"
+
+    sql_create_overviews_table = """CREATE TABLE IF NOT EXISTS overviews (
+                                        id integer PRIMARY KEY,
+                                        name text NOT NULL,
+                                        count integer NOT NULL,
+                                        date text NOT NULL,
+                                        fee FLOAT NOT NULL,
+                                        exchangeRate DOUBLE NOT NULL
+                                    );"""
+
+    sql_create_company_table = """CREATE TABLE IF NOT EXISTS company (
+                                    id integer PRIMARY KEY,
+                                    name text NOT NULL,
+                                    company_id integer NOT NULL,
+                                    date text NOT NULL,
+                                    price FLOAT NOT NULL,
+                                    FOREIGN KEY (company_id) REFERENCES overviews (id)
+                                );"""
+
+    # create a database connection
+    conn = create_connection(database)
+
+    # create tables
+    if conn is not None:
+        # create overview table
+        create_table(conn, sql_create_overviews_table)
+
+        # create company table
+        create_table(conn, sql_create_company_table)
+    else:
+        print("Error! cannot create the database connection.")
+
+    with conn:
+        # create a new overview
+        overviews = ('Google', 2, '02-04-2021', 200, 0.001);
+        company_id = create_overviews(conn, overviews)
+
+        # company
+        company1 = ('GOOGL', company_id, '02-04-2021', 0.002)
+        company2 = ('GOOGL', company_id, '03-04-2021', 0.003)
+
+        # create companies
+        create_company(conn, company1)
+        create_company(conn, company2)
+
+
+if __name__ == '__main__':
+    main()
